@@ -21,7 +21,7 @@ config.Site.ignoreGlobalBlacklist = True
 #config.Data.inputDataset = '/BuToJpsiKp_pThat-5_TuneCP5_5p02TeV_Pythia8/RunIIpp5Spring18DR-94X_mc2017_realistic_forppRef5TeV_v1-v1/AODSIM'
 #config.Data.inputDataset ='/BJPsiMM_TuneCUETP8M1_5p02TeV_pythia8/RunIIpp5Spring18MiniAOD-94X_mc2017_realistic_forppRef5TeV-v2/MINIAODSIM'
 
-config.Data.inputDataset = '/BuToJpsiKaon_pThat-0_TuneCP5_PtGT2_5p02TeV_pythia8_evtgen/RunIIpp5Spring18DR-94X_mc2017_realistic_forppRef5TeV_v2-v1/AODSIM'
+config.Data.inputDataset = '/store/himc/RunIIpp5Spring18DR/BuToJpsiKaon_pThat-0_TuneCP5_PtGT2_5p02TeV_pythia8_evtgen/AODSIM/94X_mc2017_realistic_forppRef5TeV_v2-v1/2520000/7C5D7512-7C48-EC11-B6D9-3448EDF4A7DC.root'
 
 #config.Data.inputDataset = '/BJPsiMM_TuneCUETP8M1_5p02TeV_pythia8/RunIIpp5Spring18DR-94X_mc2017_realistic_forppRef5TeV_v1_ext1-v1/AODSIM'
 #config.Data.inputDataset = '/DoubleMuon/Run2017G-17Nov2017-v1/AOD'
