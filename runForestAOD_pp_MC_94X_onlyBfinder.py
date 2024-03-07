@@ -255,7 +255,7 @@ ivars = VarParsing.VarParsing('analysis')
 ivars.maxEvents = -1
 ivars.outputFile='HiForestAOD.root'
 #ivars.inputFiles='file:/afs/cern.ch/work/w/wangj/public/BJPsiMM_TuneCUETP8M1_5p02TeV_pythia8/RunIIpp5Spring18DR-94X_mc2017_realistic_forppRef5TeV-v2/C00FF4F0-D421-E911-9F69-141877410E71.root'
-ivars.inputFiles='/store/himc/RunIIpp5Spring18DR/BuToJpsiKaon_pThat-0_TuneCP5_PtGT2_5p02TeV_pythia8_evtgen/AODSIM/94X_mc2017_realistic_forppRef5TeV_v2-v1/2520000/7C5D7512-7C48-EC11-B6D9-3448EDF4A7DC.root'
+ivars.inputFiles='file:/eos/cms/store/group/phys_heavyions/tsheng/bmc/3C62F953-D848-EC11-B9FB-20040FE9C99C.root'
 
 ivars.parseArguments() # get and parse the command line arguments
 
