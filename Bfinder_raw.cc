@@ -5,7 +5,6 @@
 #include "Bfinder/Bfinder/interface/format.h"
 #include "Bfinder/Bfinder/interface/Bntuple.h"
 #include "Bfinder/Bfinder/interface/utilities.h"
-#include "trackingEfficiency2017pp.h"
 //
 // class declaration
 //
@@ -63,8 +62,6 @@ class Bfinder : public edm::EDAnalyzer
 				);
 
 		// ----------member data ---------------------------
-   
-
 		edm::ESHandle<MagneticField> bField;
 		edm::ParameterSet theConfig;
 		edm::EDGetTokenT<reco::TrackCollection> tok_generalTrk_;
@@ -130,7 +127,7 @@ class Bfinder : public edm::EDAnalyzer
 		//histograms
 		TH1F *MuonCutLevel;
 		TH1F *TrackCutLevel;
-		TH1F *XbujCutLevel; 
+		TH1F *XbujCutLevel;
 		//How many channel
 		static int const Nchannel = 20;
 		std::vector<TH1F*> XbMassCutLevel;
@@ -139,29 +136,20 @@ class Bfinder : public edm::EDAnalyzer
 
 void Bfinder::beginJob()
 {//{{{
-	std::cout << "" << std::endl; 
-	std::cout << "Bfinder::beginJob" << std::endl; 
-	std::cout << "" << std::endl; 
-
-	root  = fs->make<TTree>("root","root");
+	root = fs->make<TTree>("root","root");
 	nt0   = fs->make<TTree>("ntKp","");     Bntuple->buildBranch(nt0);
 	nt1   = fs->make<TTree>("ntpi","");     Bntuple->buildBranch(nt1);
 	nt2   = fs->make<TTree>("ntKs","");     Bntuple->buildBranch(nt2);
 	nt3   = fs->make<TTree>("ntKstar","");  Bntuple->buildBranch(nt3);
 	nt5   = fs->make<TTree>("ntphi","");    Bntuple->buildBranch(nt5);
 	nt6   = fs->make<TTree>("ntmix","");    Bntuple->buildBranch(nt6);
-	nt7   = fs->make<TTree>("ntJpsi","");   Bntuple->buildBranch(nt7,true);
+	nt7   = fs->make<TTree>("ntJpsi","");    Bntuple->buildBranch(nt7,true);
 	ntGen = fs->make<TTree>("ntGen","");    Bntuple->buildGenBranch(ntGen);
 	EvtInfo.regTree(root);
 
 
-    //ONLY Event Info Save for now//
-
-    VtxInfo.regTree(root);
-
-   	std::cout << "" << std::endl; 
-	std::cout << "Bfinder::beginJob" << std::endl; 
-	std::cout << "" << std::endl; 
+	//ONLY Event Info Save for now//
+   VtxInfo.regTree(root);
 
 	/*
 	   VtxInfo.regTree(root);
@@ -176,11 +164,6 @@ void Bfinder::beginJob()
 
 Bfinder::Bfinder(const edm::ParameterSet& iConfig):theConfig(iConfig)
 {//{{{
-
-   	std::cout << "" << std::endl; 
-	std::cout << "Bfinder::Bfinder" << std::endl; 
-	std::cout << "" << std::endl; 
-
 	//now do what ever initialization is needed
 	detailMode_ = iConfig.getParameter<bool>("detailMode");
 	dropUnusedTracks_ = iConfig.getParameter<bool>("dropUnusedTracks");
@@ -224,6 +207,7 @@ Bfinder::Bfinder(const edm::ParameterSet& iConfig):theConfig(iConfig)
 	Dedx_Token1_ = consumes<edm::ValueMap<reco::DeDxData> >(iConfig.getParameter<edm::InputTag>("Dedx_Token1"));
 	Dedx_Token2_ = consumes<edm::ValueMap<reco::DeDxData> >(iConfig.getParameter<edm::InputTag>("Dedx_Token2"));
 
+
 	MuonCutLevel        = fs->make<TH1F>("MuonCutLevel"     , "MuonCutLevel"    , 10, 0, 10);
 	TrackCutLevel       = fs->make<TH1F>("TrackCutLevel"    , "TrackCutLevel"   , 10, 0, 10);
 	XbujCutLevel        = fs->make<TH1F>("XbujCutLevel"     , "XbujCutLevel"    , 10, 0, 10);
@@ -231,11 +215,6 @@ Bfinder::Bfinder(const edm::ParameterSet& iConfig):theConfig(iConfig)
 		TH1F* XbMassCutLevel_temp      = fs->make<TH1F>(TString::Format("XbMassCutLevel_i")   ,TString::Format("XbMassCutLevel_i")  , 10, 0, 10);
 		XbMassCutLevel.push_back(XbMassCutLevel_temp);
 	}
-
-   	std::cout << "" << std::endl; 
-	std::cout << "Bfinder::Bfinder" << std::endl; 
-	std::cout << "" << std::endl; 
-
 }//}}}
 
 Bfinder::~Bfinder()
@@ -251,12 +230,6 @@ Bfinder::~Bfinder()
 // ------------ method called for each event  ------------
 void Bfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 {
-
-	std::cout << "" << std::endl; 
-	std::cout << "Bfinder::analyze" << std::endl; 
-	std::cout << "" << std::endl; 
-
-
 	//checking input parameter size
 	if( (Bchannel_.size() != bPtCut_.size()) || (bPtCut_.size() != bEtaCut_.size()) || (bEtaCut_.size() != VtxChiProbCut_.size()) || (VtxChiProbCut_.size() != svpvDistanceCut_.size()) || (svpvDistanceCut_.size() != MaxDocaCut_.size()) || (MaxDocaCut_.size() != alphaCut_.size())){
 		std::cout<<"Unmatched input parameter vector size, EXIT"<<std::endl;
@@ -268,9 +241,7 @@ void Bfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		return;
 	}
 
-	std::cout << "*******************_Reconstructing_*******************" << std::endl;
-	std::cout << iEvent.id() << std::endl;
-	std::cout << "*******************_Reconstructing_*******************" << std::endl;
+	//std::cout << "*************************\nReconstructing event number: " << iEvent.id() << "\n";
 	using namespace edm;
 	using namespace reco;
 	//ESHandle<MagneticField> bField;
@@ -290,12 +261,12 @@ void Bfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	}
 
 	//CLEAN all memory
-	memset(&EvtInfo   ,0x00,sizeof(EvtInfo)   );
-	memset(&VtxInfo   ,0x00,sizeof(VtxInfo)   );
-	memset(&MuonInfo  ,0x00,sizeof(MuonInfo)  );
-	memset(&TrackInfo ,0x00,sizeof(TrackInfo) );
-	memset(&BInfo     ,0x00,sizeof(BInfo)     );
-	memset(&GenInfo   ,0x00,sizeof(GenInfo)   );
+	memset(&EvtInfo     ,0x00,sizeof(EvtInfo)   );
+	memset(&VtxInfo     ,0x00,sizeof(VtxInfo)   );
+	memset(&MuonInfo    ,0x00,sizeof(MuonInfo)  );
+	memset(&TrackInfo   ,0x00,sizeof(TrackInfo) );
+	memset(&BInfo       ,0x00,sizeof(BInfo)    );
+	memset(&GenInfo     ,0x00,sizeof(GenInfo)   );
 
 	// EvtInfo section{{{
 	EvtInfo.RunNo   = iEvent.id().run();
@@ -397,11 +368,6 @@ void Bfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	RefVtx = thePrimaryV.position();
 	*/
 	
-
-	std::cout << "" << std::endl; 
-	std::cout << "AQUI" << std::endl; 
-	std::cout << "" << std::endl; 
-
 	double PVBS_Pt_Max = -100.;
 	reco::Vertex PVtx_BS;
 	if( VertexHandle.isValid() && !VertexHandle.failedToGet() && VertexHandle->size() > 0) {
@@ -409,7 +375,7 @@ void Bfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		for(std::vector<reco::Vertex>::const_iterator it_vtx = VertexHandle->begin();it_vtx != VertexHandle->end(); it_vtx++ ) {
 			if (VtxInfo.Size>=MAX_Vertices) {
 				std::cout << "PVBS " << VtxInfo.Size << std::endl;
-				fprintf(stderr,"ERROR: number of Vertices exceeds the size of array.\n");
+				fprintf(stderr,"ERROR: number of  Vertices exceeds the size of array.\n");
 				break;//exit(0);
 			}
 			VtxInfo.isValid[VtxInfo.Size] = it_vtx->isValid();
@@ -482,20 +448,14 @@ void Bfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	bestvz = thePrimaryV.position().z(); bestvx = thePrimaryV.position().x(); bestvy = thePrimaryV.position().y();
 	bestvzError = thePrimaryV.zError();  bestvxError = thePrimaryV.xError(); bestvyError = thePrimaryV.yError(); 
 
-	std::cout << "" << std::endl; 
-	std::cout << "AQUI1" << std::endl; 
-	std::cout << "" << std::endl; 
-
-
 	//}}}
 	//printf("-----*****DEBUG:End of EvtInfo.\n");
 	edm::Handle<reco::TrackCollection> tracks;
 	iEvent.getByToken(tok_generalTrk_, tracks);
 
 
-	double nMult_Corrected = 0;
-	double nMult_raw = 0;
-	TrkEff2017pp trkEff =  TrkEff2017pp(false, "./../Bfinder/Bfinder/src/");
+
+	int nMult_ass_good = 0;
 	for(unsigned it=0; it<tracks->size(); ++it){
 
 		const reco::Track & trk = (*tracks)[it];
@@ -517,14 +477,12 @@ void Bfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 		if(fabs(eta)>2.4) continue;
 		if(pt<=0.4) continue;
-		nMult_Corrected += trkEff.getCorrection(pt,eta);
-		nMult_raw++;
+		nMult_ass_good++;
 	}
+std::cout << "tracksSize =" << tracks->size() << std::endl;
+std::cout << "nMult_ass_good =" << nMult_ass_good << std::endl;
+EvtInfo.nMult = nMult_ass_good;
 
-std::cout << "tracksSize " << tracks->size() << std::endl;
-std::cout << "nMult without correction " << nMult_raw << std::endl;
-std::cout << "nMult corrected " << nMult_Corrected << std::endl;
-EvtInfo.nMult = nMult_Corrected;
 
 // Double check size=0.
 MuonInfo.size   = 0;
@@ -935,18 +893,15 @@ try{
 					if (fabs(ujVFP->currentState().mass()-JPSI_MASS)>0.3) continue;
 
 					TLorentzVector uj_4vec,uj_mu1_4vec,uj_mu2_4vec;
-					uj_4vec.SetPxPyPzE(
-							ujVFP->currentState().kinematicParameters().momentum().x(),
+					uj_4vec.SetPxPyPzE(ujVFP->currentState().kinematicParameters().momentum().x(),
 							ujVFP->currentState().kinematicParameters().momentum().y(),
 							ujVFP->currentState().kinematicParameters().momentum().z(),
 							ujVFP->currentState().kinematicParameters().energy());
-					uj_mu1_4vec.SetPxPyPzE( 
-							ujmu1KP.momentum().x(),
+					uj_mu1_4vec.SetPxPyPzE( ujmu1KP.momentum().x(),
 							ujmu1KP.momentum().y(),
 							ujmu1KP.momentum().z(),
 							ujmu1KP.energy());
-					uj_mu2_4vec.SetPxPyPzE( 
-							ujmu2KP.momentum().x(),
+					uj_mu2_4vec.SetPxPyPzE( ujmu2KP.momentum().x(),
 							ujmu2KP.momentum().y(),
 							ujmu2KP.momentum().z(),
 							ujmu2KP.energy());

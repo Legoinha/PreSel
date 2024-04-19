@@ -26,13 +26,12 @@ process.HiForest.HiForestVersion = cms.string(version)
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:/afs/cern.ch/work/r/rbi/public/forest/HighEGJet_Run2017G_17Nov2017-v2_AOD_large.root'
+        'file:/eos/user/h/hmarques/test.root'
     )
 )
 
 # Number of events we want to process, -1 = all events
-process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(8))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(5))
 
 #####################################################################################
 # Load Global Tag, Geometry, etc.
@@ -80,6 +79,8 @@ process = overrideJEC_DATA_pp5020_2017(process)
 ############################
 # Event Analysis
 ############################
+print("EVENT ANALYSIS")
+
 process.load('HeavyIonsAnalysis.EventAnalysis.hievtanalyzer_data_cfi')
 process.hiEvtAnalyzer.Vertex = cms.InputTag("offlinePrimaryVertices")
 process.hiEvtAnalyzer.doCentrality = cms.bool(False)
@@ -139,6 +140,7 @@ for idmod in my_id_modules:
 #########################
 # Main analysis list
 #########################
+print("MAIN ANALYSIS LIST")
 
 process.ana_step = cms.Path(
     process.hltanalysis *
@@ -160,6 +162,7 @@ process.ana_step = cms.Path(
 #########################
 # Event Selection
 #########################
+print("EVENT SELECTION")
 
 process.load('HeavyIonsAnalysis.JetAnalysis.EventSelection_cff')
 process.pHBHENoiseFilterResultProducer = cms.Path(process.HBHENoiseFilterResultProducer)
@@ -205,6 +208,8 @@ process.ana_step = cms.Path(
     ) 
 
 #################### D/B finder #################
+print("D/B finder")
+
 AddCaloMuon = False
 runOnMC = False ## !!
 HIFormat = False
@@ -238,20 +243,7 @@ process.p = cms.Path(process.BfinderSequence)
 import FWCore.ParameterSet.VarParsing as VarParsing
 ivars = VarParsing.VarParsing('analysis')
 
-ivars.maxEvents = 8
-#ivars.maxEvents = -1
-ivars.outputFile='HiForestAOD.root'
-ivars.inputFiles='file:/eos/cms/store/group/phys_heavyions/tsheng/bmc/3C62F953-D848-EC11-B9FB-20040FE9C99C.root'
 ivars.parseArguments() # get and parse the command line arguments
 
-process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(ivars.inputFiles)
-)
 
-process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(ivars.maxEvents)
-)
-
-process.TFileService = cms.Service("TFileService",
-    fileName = cms.string(ivars.outputFile))
 
