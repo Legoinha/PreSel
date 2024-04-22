@@ -26,12 +26,12 @@ process.HiForest.HiForestVersion = cms.string(version)
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:/eos/user/h/hmarques/test.root'
+        'file:/eos/user/h/hmarques/CMSSW_9_4_10/src/bfinder/testJOB/test.root'
     )
 )
 
 # Number of events we want to process, -1 = all events
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(5))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 
 #####################################################################################
 # Load Global Tag, Geometry, etc.
@@ -60,7 +60,7 @@ process.GlobalTag.toGet.extend([
 #####################################################################################
 
 process.TFileService = cms.Service("TFileService",
-    fileName = cms.string("HiForestAOD.root"))
+    fileName = cms.string("./testJOB/HiForestAOD.root"))
 
 #####################################################################################
 # Additional Reconstruction and Analysis: Main Body
@@ -79,7 +79,6 @@ process = overrideJEC_DATA_pp5020_2017(process)
 ############################
 # Event Analysis
 ############################
-print("EVENT ANALYSIS")
 
 process.load('HeavyIonsAnalysis.EventAnalysis.hievtanalyzer_data_cfi')
 process.hiEvtAnalyzer.Vertex = cms.InputTag("offlinePrimaryVertices")
@@ -140,7 +139,6 @@ for idmod in my_id_modules:
 #########################
 # Main analysis list
 #########################
-print("MAIN ANALYSIS LIST")
 
 process.ana_step = cms.Path(
     process.hltanalysis *
@@ -162,7 +160,6 @@ process.ana_step = cms.Path(
 #########################
 # Event Selection
 #########################
-print("EVENT SELECTION")
 
 process.load('HeavyIonsAnalysis.JetAnalysis.EventSelection_cff')
 process.pHBHENoiseFilterResultProducer = cms.Path(process.HBHENoiseFilterResultProducer)
@@ -202,14 +199,12 @@ process.pAna = cms.EndPath(process.skimanalysis)
 
 process.ana_step = cms.Path( 
     process.hltanalysis * 
-    process.hiEvtAnalyzer * 
+    process.hiEvtAnalyzer  
     # process.hltobject + 
-    process.HiForest 
+#process.HiForest 
     ) 
 
 #################### D/B finder #################
-print("D/B finder")
-
 AddCaloMuon = False
 runOnMC = False ## !!
 HIFormat = False
@@ -218,6 +213,7 @@ VtxLabel = "offlinePrimaryVerticesRecovery"
 TrkLabel = "generalTracks"
 useL1Stage2 = True
 HLTProName = "HLT"
+
 from Bfinder.finderMaker.finderMaker_75X_cff import finderMaker_75X
 finderMaker_75X(process, AddCaloMuon, runOnMC, HIFormat, UseGenPlusSim, VtxLabel, TrkLabel, useL1Stage2, HLTProName)
 
@@ -231,12 +227,9 @@ process.Bfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 
 process.Bfinder.svpvDistanceCut = cms.vdouble(2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 0.0)
 process.Bfinder.doTkPreCut = cms.bool(True)
 process.Bfinder.doMuPreCut = cms.bool(True)
-process.Bfinder.MuonTriggerMatchingPath = cms.vstring(
-    "HLT_HIL1DoubleMu0_v1")
-process.Bfinder.MuonTriggerMatchingFilter = cms.vstring(
-    "hltL1fL1sDoubleMu0L1Filtered0")
+process.Bfinder.MuonTriggerMatchingPath = cms.vstring("HLT_HIL1DoubleMu0_v1")
+process.Bfinder.MuonTriggerMatchingFilter = cms.vstring("hltL1fL1sDoubleMu0L1Filtered0")
 process.p = cms.Path(process.BfinderSequence)
-
 
 
 ###############################
@@ -244,6 +237,4 @@ import FWCore.ParameterSet.VarParsing as VarParsing
 ivars = VarParsing.VarParsing('analysis')
 
 ivars.parseArguments() # get and parse the command line arguments
-
-
 
