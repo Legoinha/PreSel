@@ -26,12 +26,12 @@ process.HiForest.HiForestVersion = cms.string(version)
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-        'file:/eos/user/h/hmarques/CMSSW_9_4_10/src/bfinder/testJOB/test.root'
+'root://cms-xrd-global.cern.ch//store/data/Run2017G/DoubleMuon/AOD/17Nov2017-v1/00000/E2A9F70B-8042-E811-9D04-FA163E74586C.root'
     )
 )
 
-# Number of events we want to process, -1 = all events
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
+#Number of events we want to process, -1 = all events
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
 
 #####################################################################################
 # Load Global Tag, Geometry, etc.
@@ -222,7 +222,7 @@ process.Bfinder.makeBntuple = cms.bool(True)
 process.Bfinder.tkPtCut = cms.double(0.2) # before fit
 process.Bfinder.jpsiPtCut = cms.double(0.0) # before fit
 process.Bfinder.bPtCut = cms.vdouble(2.0, 5.0, 5.0, 2.0, 2.0, 2.0, 5.0) # before fit
-process.Bfinder.Bchannel = cms.vint32(1, 0, 0, 1, 1, 1, 0)
+process.Bfinder.Bchannel = cms.vint32(1, 0, 0, 0, 0, 0, 0)
 process.Bfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.10)
 process.Bfinder.svpvDistanceCut = cms.vdouble(2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 0.0)
 process.Bfinder.doTkPreCut = cms.bool(True)
