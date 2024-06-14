@@ -398,9 +398,6 @@ void Bfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	*/
 	
 
-	std::cout << "" << std::endl; 
-	std::cout << "AQUI" << std::endl; 
-	std::cout << "" << std::endl; 
 
 	double PVBS_Pt_Max = -100.;
 	reco::Vertex PVtx_BS;
@@ -473,7 +470,7 @@ void Bfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	//printf("-----*****DEBUG:End of EvtInfo.\n");
 
 	//ZZ New Addition of pp Event Multiplicity 
-
+// test
 	edm::Handle<reco::VertexCollection> vertices;
 	iEvent.getByToken(tok_offlinePV_,vertices);
 	double bestvz=-999.9, bestvx=-999.9, bestvy=-999.9;
@@ -481,10 +478,6 @@ void Bfinder::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 	//  const reco::Vertex & vtx = (*vertices)[0];
 	bestvz = thePrimaryV.position().z(); bestvx = thePrimaryV.position().x(); bestvy = thePrimaryV.position().y();
 	bestvzError = thePrimaryV.zError();  bestvxError = thePrimaryV.xError(); bestvyError = thePrimaryV.yError(); 
-
-	std::cout << "" << std::endl; 
-	std::cout << "AQUI1" << std::endl; 
-	std::cout << "" << std::endl; 
 
 
 	//}}}
