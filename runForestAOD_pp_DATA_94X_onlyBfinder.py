@@ -30,8 +30,9 @@ process.source = cms.Source("PoolSource",
     )
 )
 
-#Number of events we want to process, -1 = all events
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+# Number of events we want to process, -1 = all events
+process.maxEvents = cms.untracked.PSet(
+    input = cms.untracked.int32(8))
 
 #####################################################################################
 # Load Global Tag, Geometry, etc.
@@ -60,7 +61,7 @@ process.GlobalTag.toGet.extend([
 #####################################################################################
 
 process.TFileService = cms.Service("TFileService",
-    fileName = cms.string("./testJOB/HiForestAOD.root"))
+    fileName = cms.string("testJOB/HiForestAOD.root"))
 
 #####################################################################################
 # Additional Reconstruction and Analysis: Main Body
@@ -79,7 +80,6 @@ process = overrideJEC_DATA_pp5020_2017(process)
 ############################
 # Event Analysis
 ############################
-
 process.load('HeavyIonsAnalysis.EventAnalysis.hievtanalyzer_data_cfi')
 process.hiEvtAnalyzer.Vertex = cms.InputTag("offlinePrimaryVertices")
 process.hiEvtAnalyzer.doCentrality = cms.bool(False)
@@ -199,9 +199,9 @@ process.pAna = cms.EndPath(process.skimanalysis)
 
 process.ana_step = cms.Path( 
     process.hltanalysis * 
-    process.hiEvtAnalyzer  
+    process.hiEvtAnalyzer * 
     # process.hltobject + 
-#process.HiForest 
+    process.HiForest 
     ) 
 
 #################### D/B finder #################
@@ -209,11 +209,10 @@ AddCaloMuon = False
 runOnMC = False ## !!
 HIFormat = False
 UseGenPlusSim = False
-VtxLabel = "offlinePrimaryVerticesRecovery"
+VtxLabel = "offlinePrimaryVerticesWithBS"
 TrkLabel = "generalTracks"
 useL1Stage2 = True
 HLTProName = "HLT"
-
 from Bfinder.finderMaker.finderMaker_75X_cff import finderMaker_75X
 finderMaker_75X(process, AddCaloMuon, runOnMC, HIFormat, UseGenPlusSim, VtxLabel, TrkLabel, useL1Stage2, HLTProName)
 
@@ -222,19 +221,26 @@ process.Bfinder.makeBntuple = cms.bool(True)
 process.Bfinder.tkPtCut = cms.double(0.2) # before fit
 process.Bfinder.jpsiPtCut = cms.double(0.0) # before fit
 process.Bfinder.bPtCut = cms.vdouble(2.0, 5.0, 5.0, 2.0, 2.0, 2.0, 5.0) # before fit
-process.Bfinder.Bchannel = cms.vint32(1, 0, 0, 0, 0, 0, 0)
+process.Bfinder.Bchannel = cms.vint32(1, 0, 0, 1, 1, 1, 0)
 process.Bfinder.VtxChiProbCut = cms.vdouble(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.10)
 process.Bfinder.svpvDistanceCut = cms.vdouble(2.0, 2.0, 2.0, 2.0, 2.0, 2.0, 0.0)
 process.Bfinder.doTkPreCut = cms.bool(True)
 process.Bfinder.doMuPreCut = cms.bool(True)
-process.Bfinder.MuonTriggerMatchingPath = cms.vstring("HLT_HIL1DoubleMu0_v1")
-process.Bfinder.MuonTriggerMatchingFilter = cms.vstring("hltL1fL1sDoubleMu0L1Filtered0")
+process.Bfinder.MuonTriggerMatchingPath = cms.vstring(
+    "HLT_HIL1DoubleMu0_v1")
+process.Bfinder.MuonTriggerMatchingFilter = cms.vstring(
+    "hltL1fL1sDoubleMu0L1Filtered0")
 process.p = cms.Path(process.BfinderSequence)
+
 
 
 ###############################
 import FWCore.ParameterSet.VarParsing as VarParsing
 ivars = VarParsing.VarParsing('analysis')
 
+
+
+
 ivars.parseArguments() # get and parse the command line arguments
+
 
